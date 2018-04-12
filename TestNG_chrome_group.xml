@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Default Suite">
+    <test name="FirstLesson">
+        <parameter name="Browser" value="chrome"></parameter>
+        <groups>
+            <run>
+                <include name = "search" />
+            </run>
+        </groups>
+        <classes>
+            <class name="yaTest">
+            </class>
+        </classes>
+
+    </test> <!-- FirstLesson -->
+</suite>
