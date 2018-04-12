@@ -49,10 +49,7 @@ public class yaTest {
         mainPage = new MainPage(driver);
         searchResultPage = new SearchResultPage(driver);
 
-
-      //  MainPage mainPage = new MainPage(driver);
         mainPage.search("Авиабилеты");
-
     }
 
     @AfterMethod
@@ -72,7 +69,6 @@ public class yaTest {
     public void defaultLocationInFromField(){
         Assert.assertEquals(searchResultPage.getFromText(),
                 searchResultPage.getCurrentRegion() , "Values should be the same ");
-
     }
 
     @Test(description = "Check placeholder")
@@ -89,7 +85,6 @@ public class yaTest {
 
     @Test(groups = {"search", "regression"})
     public void whenHasClearButton() {
-
         SoftAssert softAssert=new SoftAssert();
 
         softAssert.assertTrue(searchResultPage.isFromInputClearDisplate(), "When input should have clear button");
@@ -100,9 +95,7 @@ public class yaTest {
 
     @Test(groups = {"search", "smoke"})
     public void searchTicketButtonIsPresent() {
-
         Assert.assertTrue(searchResultPage.isSearchTicketButtonDisplayd(), "Search ticket button displayd");
-
     }
 
     @Test
@@ -110,13 +103,13 @@ public class yaTest {
         if (!isDesktop()) {
             throw new SkipException("Doesn't work for mobile");
         }
+
         WebElement switchButton = driver.findElement(By.xpath("//div[@class='geo-route__switcher']"));
         Assert.assertTrue(switchButton.isDisplayed(), "Switch button should be displayed");
     }
 
     @Test
     public void clearFromByBackSpace(){
-
         WebElement fromInputField = driver.findElement(By.name("fromName"));
         String fromValue = fromInputField.getAttribute("value");
 
@@ -126,15 +119,10 @@ public class yaTest {
         }
         fromValue = fromInputField.getAttribute("value");
         Assert.assertTrue(fromValue.isEmpty(), "Value should be emptu");
-
-        System.out.println(fromValue);
-
     }
+
     public boolean isDesktop() {
-
         List<WebElement> moreLabels = driver.findElements(By.xpath("//div[contains(@class, 'navigation__more-label')]"));
-
         return moreLabels.size() > 0;
-
     }
 }
