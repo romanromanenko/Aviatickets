@@ -1,6 +1,3 @@
-import Pages.MainPage;
-import Pages.SearchResultPage;
-import helpers.helper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -8,18 +5,18 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.*;
 import org.testng.annotations.Optional;
-import org.testng.asserts.SoftAssert;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class yaTest {
     private WebDriver driver;
-    private MainPage mainPage;
-    private SearchResultPage searchResultPage;
 
     @BeforeMethod(alwaysRun = true)
     @Parameters("Browser")
@@ -40,16 +37,19 @@ public class yaTest {
             driver = new ChromeDriver(chromeOptions);
         } else if (browserName.contentEquals("ff")) {
             driver = new FirefoxDriver();
+        } else if (browserName.contentEquals("ie")) {
+            driver = new InternetExplorerDriver();
         } else {
             throw new IllegalArgumentException("Unknown browser");
         }
 
         driver.get("https://www.yandex.by/");
 
-        mainPage = new MainPage(driver);
-        searchResultPage = new SearchResultPage(driver);
+        WebElement inputField = driver.findElement(By.name("text"));
+        inputField.sendKeys("Авиабилеты");
 
-        mainPage.search("Авиабилеты");
+        WebElement searchButton = driver.findElement(By.xpath("//button[@type='submit']"));
+        searchButton.click();
     }
 
     @AfterMethod
@@ -67,35 +67,53 @@ public class yaTest {
 
     @Test
     public void defaultLocationInFromField(){
-        Assert.assertEquals(searchResultPage.getFromText(),
-                searchResultPage.getCurrentRegion() , "Values should be the same ");
+        WebElement regionChange = driver.findElement(By.xpath("//div[@class='region-change']/a"));
+        String currentRegion = regionChange.getText();
+
+        WebElement fromInputField = driver.findElement(By.name("fromName"));
+        String fromValue = fromInputField.getAttribute("value");
+
+        Assert.assertEquals(fromValue, currentRegion, "Values should be the same ");
+
     }
 
     @Test(description = "Check placeholder")
     public void toPlaceholderVerifying() {
-        Assert.assertTrue(searchResultPage.getToPlaceholder().isEmpty(), "Placeholder is visible");
+        WebElement toField = driver.findElement(By.name("toName"));
+        String toValue = toField.getAttribute("value");
+
+        Assert.assertTrue(toValue.isEmpty(), "Placeholder is visible");
     }
 
     @Test
     public void whenDefaultDateCheck(){
-        String defaultDate = searchResultPage.getwhenDate();
-        String expectedDate = helper.getCurrentDate("yyyy-MM-dd",3);
-        Assert.assertEquals(defaultDate, expectedDate, "Default date should be correct");
+        WebElement whenField = driver.findElement(By.name("when"));
+        String defaultDate = whenField.getAttribute("value");
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 3);
+        Date date = cal.getTime();
+
+        Assert.assertEquals(defaultDate, dateFormat.format(date), "Default date should be correct");
     }
 
     @Test(groups = {"search", "regression"})
     public void whenHasClearButton() {
-        SoftAssert softAssert=new SoftAssert();
+        WebElement fromInputClearButton = driver.findElement(By.xpath("//div[input[@name='when']]/span"));
 
-        softAssert.assertTrue(searchResultPage.isFromInputClearDisplate(), "When input should have clear button");
-        softAssert.assertFalse(searchResultPage.getWhenDataHolder().isEmpty(), "When input shouldn't have calendar icon");
+        Assert.assertTrue(fromInputClearButton.isDisplayed(), "When input should have clear button");
 
-        softAssert.assertAll();
+        WebElement whenDateHolder = driver.findElement(By.xpath("//div[input[@name='when']]/input"));
+
+        Assert.assertFalse(whenDateHolder.getAttribute("value").isEmpty(), "When input shouldn't have calendar icon");
     }
 
     @Test(groups = {"search", "smoke"})
     public void searchTicketButtonIsPresent() {
-        Assert.assertTrue(searchResultPage.isSearchTicketButtonDisplayd(), "Search ticket button displayd");
+        WebElement searchTicketButton = driver.findElement(By.xpath("//a[contains(@class, 'find-offers')]"));
+
+        Assert.assertTrue(searchTicketButton.isDisplayed());
     }
 
     @Test
@@ -103,7 +121,6 @@ public class yaTest {
         if (!isDesktop()) {
             throw new SkipException("Doesn't work for mobile");
         }
-
         WebElement switchButton = driver.findElement(By.xpath("//div[@class='geo-route__switcher']"));
         Assert.assertTrue(switchButton.isDisplayed(), "Switch button should be displayed");
     }
@@ -114,15 +131,24 @@ public class yaTest {
         String fromValue = fromInputField.getAttribute("value");
 
         int numberOfLetters = fromValue.length();
-        for (int i = 0; i < numberOfLetters; i++) {
+
+        for (int i = 0; i < numberOfLetters ; i++) {
             fromInputField.sendKeys(Keys.BACK_SPACE);
         }
+
         fromValue = fromInputField.getAttribute("value");
-        Assert.assertTrue(fromValue.isEmpty(), "Value should be emptu");
+
+        Assert.assertTrue(fromValue.isEmpty(), "Value should be empty");
     }
 
     public boolean isDesktop() {
         List<WebElement> moreLabels = driver.findElements(By.xpath("//div[contains(@class, 'navigation__more-label')]"));
+
         return moreLabels.size() > 0;
+
     }
+
+
+
+
 }

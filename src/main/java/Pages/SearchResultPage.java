@@ -1,20 +1,25 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package Pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class SearchResultPage {
-
     private By regionChange = By.xpath("//div[@class='region-change']/a");
     private By fromInput = By.name("fromName");
     private By toInput = By.name("toName");
     private By whenInput = By.name("when");
     private By fromInputClear = By.xpath("//div[input[@name='when']]/span");
-    private By whenDataHolder = By.xpath("//div[input[@name='when']]/input");
+    private By whenDateHolder = By.xpath("//div[input[@name='when']]/input");
     private By searchTicket = By.xpath("//a[contains(@class, 'find-offers')]");
     private By moreLabel = By.xpath("//div[contains(@class, 'navigation__more-label')]");
-
+    private By switchElement = By.xpath("//div[@class='geo-route__switcher']");
     private WebDriver driver;
 
     public SearchResultPage(WebDriver driver) {
@@ -22,45 +27,57 @@ public class SearchResultPage {
     }
 
     public String getCurrentRegion() {
-
-        WebElement regionChangeLable = driver.findElement(regionChange);
-        return regionChangeLable.getText();
+        WebElement regionChangeLabel = this.driver.findElement(this.regionChange);
+        return regionChangeLabel.getText();
     }
 
-    public String getFromText(){
-
-        WebElement fromInputField = driver.findElement(fromInput);
+    public String getFromText() {
+        WebElement fromInputField = this.driver.findElement(this.fromInput);
         return fromInputField.getAttribute("value");
-
     }
 
-    public String getToPlaceholder(){
-        WebElement toField = driver.findElement(By.name("toName"));
+    public String getToPlaceholder() {
+        WebElement toField = this.driver.findElement(this.toInput);
         return toField.getAttribute("value");
-
     }
 
-    public String getwhenDate(){
-
-        WebElement whenInputField = driver.findElement(whenInput);
+    public String getWhenDate() {
+        WebElement whenInputField = this.driver.findElement(this.whenInput);
         return whenInputField.getAttribute("value");
     }
 
-    public boolean isFromInputClearDisplate (){
-
-        return driver.findElement(fromInputClear).isDisplayed();
+    public boolean isFromInputClearButtonDisplayed() {
+        return this.driver.findElement(this.fromInputClear).isDisplayed();
     }
 
-    public String getWhenDataHolder(){
+    public String getWhenDateHolder() {
 
-        return driver.findElement(whenDataHolder).getAttribute("value");
+        return this.driver.findElement(this.whenDateHolder).getAttribute("value");
     }
 
-    public boolean isSearchTicketButtonDisplayd(){
+    public boolean isSearchTicketButtonDisplayed() {
 
-        return driver.findElement(searchTicket).isDisplayed();
+        return this.driver.findElement(this.searchTicket).isDisplayed();
     }
 
- //   public boolean
+    public boolean isSwitchButtonDisplayed() {
 
+        return this.driver.findElement(this.switchElement).isDisplayed();
+    }
+
+    public void clearFromInputByBackspace() {
+        WebElement fromInputField = this.driver.findElement(this.fromInput);
+        String fromValue = fromInputField.getAttribute("value");
+        int numberOfLetters = fromValue.length();
+
+        for(int i = 0; i < numberOfLetters; ++i) {
+            fromInputField.sendKeys(new CharSequence[]{Keys.BACK_SPACE});
+        }
+
+    }
+
+    public boolean isMoreLabelDisplayed() {
+
+        return this.driver.findElements(this.moreLabel).size() > 0;
+    }
 }
