@@ -6,7 +6,7 @@
         <classes>
             <class name="yaTest">
                 <methods>
-                    <include name="clearFromByBackSpace"/>
+                    <!--<include name="clearFromByBackSpace"/>-->
                     <!--<include name="searchTicketButtonIsPresent"/>-->
 
                 </methods>

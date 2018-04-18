@@ -1,5 +1,7 @@
 import helpers.helper;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -13,6 +15,7 @@ import Pages.SearchResultPage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class YandexTestObject {
     private WebDriver driver;
@@ -47,6 +50,8 @@ public class YandexTestObject {
 
         mainPage = new MainPage(driver);
         searchResultPage = new SearchResultPage(driver);
+
+        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 
         driver.get("https://www.yandex.by/");
 
@@ -97,17 +102,8 @@ public class YandexTestObject {
 
     @Test(groups = {"search", "smoke"})
     public void searchTicketButtonIsPresent() {
-        Assert.assertTrue(searchResultPage.isSearchTicketButtonDisplayed(), "Search ticket button should be displayed");
+        Assert.assertTrue(searchResultPage.isSearchTicketButtonDisplayed(),"Search ticket button should be displayed");
     }
-
-//    @Test
-//    public void switchButtonIsDisplayed() {
-//        if (!isDesktop()) {
-//            throw new SkipException("Doesn't work for mobile");
-//        }
-//        WebElement switchButton = driver.findElement(By.xpath("//div[@class='geo-route__switcher']"));
-//        Assert.assertTrue(switchButton.isDisplayed(), "Switch button should be displayed");
-//    }
 
     @Test
     public void switchButtonIsDisplayed() {
@@ -117,22 +113,6 @@ public class YandexTestObject {
         Assert.assertTrue(searchResultPage.isSwitchButtonDisplayed(), "Switch button should be displayed");
     }
 
-//    @Test
-//    public void clearFromByBackSpace(){
-//        WebElement fromInputField = driver.findElement(By.name("fromName"));
-//        String fromValue = fromInputField.getAttribute("value");
-//
-//        int numberOfLetters = fromValue.length();
-//
-//        for (int i = 0; i < numberOfLetters ; i++) {
-//            fromInputField.sendKeys(Keys.BACK_SPACE);
-//        }
-//
-//        fromValue = fromInputField.getAttribute("value");
-//
-//        Assert.assertTrue(fromValue.isEmpty(), "Value should be empty");
-//    }
-
     @Test
     public void clearFromByBackSpace(){
         searchResultPage.clearFromInputByBackspace();
@@ -140,16 +120,54 @@ public class YandexTestObject {
         Assert.assertTrue(searchResultPage.getFromText().isEmpty(), "Value should be empty");
     }
 
-//    public boolean isDesktop() {
-//        List<WebElement> moreLabels = driver.findElements(By.xpath("//div[contains(@class, 'navigation__more-label')]"));
-//
-//        return moreLabels.size() > 0;
-//    }
+    @Test
+    public void clearFromInputByClearButton(){
+        searchResultPage.clickClearButton();
+
+        Assert.assertTrue(searchResultPage.getFromText().isEmpty(), "Value should be empty");
+    }
+
+    @Test
+    public void fromDropDownIsAppear() throws InterruptedException {
+        searchResultPage.clickFromField();
+        String ddText = searchResultPage.getDropDownTest();
+        Assert.assertTrue(ddText.split("\n").length > 0, "Drop down list should contain ");
+
+    }
+
+    @Test
+    public void fromDropDownIsAppwaerByTab(){
+        searchResultPage.clickToInput();
+        searchResultPage.sendKeys(Keys.SHIFT.toString() + Keys.TAB.toString());
+    }
+
+    @Test
+    public void fromDropDwnWalidation() throws InterruptedException {
+
+       // searchResultPage.clearFromeField();
+        searchResultPage.clickClearButton();
+        searchResultPage.fillFromField("М");
+        Thread.sleep(500);
+        searchResultPage.fillFromField("и");
+        Thread.sleep(500);
+        searchResultPage.fillFromField("н");
+        Thread.sleep(500);
+
+
+        String ddText = searchResultPage.getDropDownTest();
+
+        String[] cities = ddText.split("\n");
+        boolean allCitiesAreOk = true;
+
+        for (int i = 1; i <cities.length ; i++) {
+            allCitiesAreOk = allCitiesAreOk && cities[i].startsWith("Мин");
+        }
+
+        Assert.assertTrue(allCitiesAreOk, "All cities should start with 'Мин'");
+    }
 
     public boolean isDesktop() {
         return searchResultPage.isMoreLabelDisplayed();
     }
-
-
 
 }
