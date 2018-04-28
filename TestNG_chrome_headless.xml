@@ -2,16 +2,14 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Default Suite">
     <test name="FirstLesson">
-        <parameter name="Browser" value="chrome"></parameter>
-        <groups>
-            <run>
-                <include name = "search" />
-            </run>
-        </groups>
+        <parameter name="Browser" value="headless"></parameter>
         <classes>
             <class name="YandexTestObject">
+                <methods>
+                    <include name="whenHasClearButton"/>
+
+                </methods>
             </class>
         </classes>
-
     </test> <!-- FirstLesson -->
 </suite>

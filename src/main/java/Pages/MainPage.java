@@ -2,21 +2,21 @@ package Pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 public class MainPage {
 
-    private By inputField = By.name("text");
-    private By searchButton = By.xpath("//button[@type='submit']");
+    @FindBy(name = "text")
+    WebElement inputField;
 
-    private WebDriver driver;
-
-    public MainPage(WebDriver driver) {
-        this.driver = driver;
-    }
+    @FindBy(xpath = "//button[@type='submit']")
+    WebElement searchButton;
 
     public void search(String searchPharse){
-        driver.findElement(inputField).sendKeys(searchPharse);
-        driver.findElement(searchButton).click();
+
+        inputField.sendKeys(searchPharse);
+        searchButton.click();
     }
 
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Default Suite" parallel="tests">
+    <test name="Run1">
+        <parameter name="Browser" value="grid_chrome"></parameter>
+        <classes>
+            <class name="YandexTestObject">
+                <methods>
+                    <include name="verifySearchInAddress"/>
+                    <include name="toPlaceholderVerifying"/>
+                    <include name="whenHasClearButton"/>
+                    <include name="switchButtonIsDisplayed"/>
+                    <include name="clearFromInputByClearButton"/>
+                    <include name="fromDropDownIsAppwaerByTab"/>
+                    <include name="clearFieldFrom"/>
+                    <include name="checkListDropeDown"/>
+
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Run2">
+        <parameter name="Browser" value="grid_chrome"></parameter>
+        <classes>
+            <class name="YandexTestObject">
+                <methods>
+                    <include name="defaultLocationInFromField"/>
+                    <include name="whenDefaultDateCheck"/>
+                    <include name="searchTicketButtonIsPresent"/>
+                    <include name="clearFromByBackSpace"/>
+                    <include name="fromDropDownIsAppear"/>
+                    <include name="inputString"/>
+                    <include name="clearFieldWhereByButton"/>
+                    <include name="inputNameOfCity"/>
+
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
